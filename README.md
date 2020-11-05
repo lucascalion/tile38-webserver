@@ -20,7 +20,7 @@ PUBKEY_URI="https://my.public.key/key.pem"
 # Address and port that the server will bind to
 SERVER_ADDR="0.0.0.0:4433"
 #Server .cert file
-SERVER_CERT=server.cert
+SERVER_CERT=server.crt
 #Server key file
 SERVER_KEY=server.key
 # Timeouts are expressed in seconds
@@ -30,7 +30,7 @@ SERVER_READ_TIMEOUT=15
 CACHE_DURATION=10
 ```
 
-# Generating server.cert and server.key
+# Generating server.crt and server.key
 ```bash
-openssl req -x509 -nodes -newkey ec:secp384r1 -keyout server.key -out server.crt -days 3650
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -keyout server.key -out server.crt -days 3650
 ```
