@@ -15,6 +15,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func init() {
+	err := godotenv.Load("data/.env")
+	if err != nil {
+		log.Fatalln("Error loading .env file. Make sure it is present at the data folder")
+	}
+}
+
 func validateRequest(validationType string, authHeader string) bool {
 	if validationType == "jwt_rsa" {
 		token := strings.Split(authHeader, " ")[1]
@@ -46,11 +53,6 @@ func validateRequest(validationType string, authHeader string) bool {
 }
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Println("Error loading .env file. Make sure it is present at the root folder")
-		return
-	}
 	validationType := os.Getenv("VALIDATION_TYPE")
 	router := mux.NewRouter()
 

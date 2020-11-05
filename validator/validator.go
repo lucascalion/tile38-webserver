@@ -11,13 +11,20 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	_ "github.com/joho/godotenv/autoload"
+	"github.com/joho/godotenv"
 )
 
 var (
-	valid_alg = strings.Split(os.Getenv("JWT_VALID_ALG"), " ")
+	valid_alg []string
 	keyCache  = PubKeyCache{"", time.Time{}}
 )
+
+func init() {
+	// Not checking for errors since main.go already checked
+	path, _ := os.Getwd()
+	_ = godotenv.Load(path + "/data/.env")
+	valid_alg = strings.Split(os.Getenv("JWT_VALID_ALG"), " ")
+}
 
 type PubKeyCache struct {
 	pemFile string

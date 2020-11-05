@@ -5,6 +5,10 @@ and only authorized requests will be routed. Since you can only using tile38 AUT
 this docker image allows you ensure http calls only come from authorized clients.
 
 # Environment variables
+
+This is an example for the .env file that must be placed inside the data folder.
+Note that data folder is a docker volume that must be mounted during container creation.
+
 ```
 # URI for the tile38 server
 # !!IMPORTANT!! DO NOT INCLUDE TRAILING SLASHES
@@ -15,14 +19,16 @@ TILE38_URI="http://localhost:1234"
 VALIDATION_TYPE="jwt_rsa"
 # VALIDATION_SECRET is required if VALIDATION_TYPE is equal to jwt_hmac or basic
 #VALIDATION_SECRET="mysecret"
+# List of jwt valid alg values, this is required for security purposes
+JWT_VALID_ALG="RS512 RS256"
 # URI for a RSA Public key pem file used during request validation if VALIDATION_TYPE is jwt_rsa
 PUBKEY_URI="https://my.public.key/key.pem"
 # Address and port that the server will bind to
 SERVER_ADDR="0.0.0.0:4433"
 #Server .cert file
-SERVER_CERT=server.crt
+SERVER_CERT="data/server.crt"
 #Server key file
-SERVER_KEY=server.key
+SERVER_KEY="data/server.key"
 # Timeouts are expressed in seconds
 SERVER_WRITE_TIMEOUT=15
 SERVER_READ_TIMEOUT=15
@@ -31,6 +37,9 @@ CACHE_DURATION=10
 ```
 
 # Generating server.crt and server.key
+This is an example of how to create a self-signed certificate and private key for the server.
+The server expects these files to be placed inside the data folder
+
 ```bash
 openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -keyout server.key -out server.crt -days 3650
 ```
