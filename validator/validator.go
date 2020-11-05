@@ -11,10 +11,11 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 var (
-	valid_alg = [1]string{"RS512"}
+	valid_alg = strings.Split(os.Getenv("JWT_VALID_ALG"), " ")
 	keyCache  = PubKeyCache{"", time.Time{}}
 )
 

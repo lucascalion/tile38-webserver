@@ -61,7 +61,7 @@ func main() {
 			w.WriteHeader(401)
 			return
 		}
-		if validateRequest(validationType, authHeader[0]) {
+		if !validateRequest(validationType, authHeader[0]) {
 			w.WriteHeader(401)
 			return
 		}
