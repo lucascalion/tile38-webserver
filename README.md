@@ -34,3 +34,6 @@ CACHE_DURATION=10
 ```bash
 openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -keyout server.key -out server.crt -days 3650
 ```
+
+# License
+MIT
