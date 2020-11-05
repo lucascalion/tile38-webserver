@@ -1,0 +1,4 @@
+#!/bin/bash
+
+nohup tile38-server
+tile38-webserver

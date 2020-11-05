@@ -21,8 +21,7 @@ var (
 
 func init() {
 	// Not checking for errors since main.go already checked
-	path, _ := os.Getwd()
-	_ = godotenv.Load(path + "/data/.env")
+	_ = godotenv.Load(".env")
 	valid_alg = strings.Split(os.Getenv("JWT_VALID_ALG"), " ")
 }
 
