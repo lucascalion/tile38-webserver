@@ -2,3 +2,5 @@
 *.crt
 *.key
 data/*
+packages/*
+vendor/*

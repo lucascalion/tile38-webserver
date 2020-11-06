@@ -26,9 +26,11 @@ PUBKEY_URI="https://my.public.key/key.pem"
 # Address and port that the server will bind to
 SERVER_ADDR="0.0.0.0:4433"
 #Server .cert file
-SERVER_CERT="data/server.crt"
+#Path is relative to data folder
+SERVER_CERT="server.crt"
 #Server key file
-SERVER_KEY="data/server.key"
+#Path is relative to data folder
+SERVER_KEY="server.key"
 # Timeouts are expressed in seconds
 SERVER_WRITE_TIMEOUT=15
 SERVER_READ_TIMEOUT=15
@@ -41,7 +43,7 @@ This is an example of how to create a self-signed certificate and private key fo
 The server expects these files to be placed inside the data folder
 
 ```bash
-openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -keyout server.key -out server.crt -days 3650
+openssl req -x509 -nodes -days 1024 -newkey rsa:2048 -keyout server.key -out server.crt
 ```
 
 # License
