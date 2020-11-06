@@ -3,8 +3,8 @@ FROM alpine:3.12.1
 ENV TILE38_VERSION 1.22.3
 ENV TILE38_DOWNLOAD_URL https://github.com/tidwall/tile38/releases/download/$TILE38_VERSION/tile38-$TILE38_VERSION-linux-amd64.tar.gz
 
-ENV TILE38_WEBSERVER_VERSION 0.1.0
-ENV TILE38_WEBSERVER_DOWNLOAD_URL https://github.com/lucascalion/tile38-webserver/releases/download/v$TILE38_WEBSERVER_VERSION/tile38-webserver-$TILE38_WEBSERVER_VERSION-linux-amd64.tar.gz
+ENV TILE38_WEBSERVER_VERSION 0.1.1
+ENV TILE38_WEBSERVER_DOWNLOAD_URL https://github.com/lucascalion/tile38-webserver/releases/download/$TILE38_WEBSERVER_VERSION/tile38-webserver-$TILE38_WEBSERVER_VERSION-linux-amd64.tar.gz
 RUN addgroup -S tile38 && adduser -S -G tile38 tile38
 
 RUN apk update \
