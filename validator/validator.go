@@ -16,6 +16,7 @@ import (
 
 var (
 	valid_alg []string
+	valid_sub []string
 	keyCache  = PubKeyCache{"", time.Time{}}
 )
 
@@ -23,6 +24,7 @@ func init() {
 	// Not checking for errors since main.go already checked
 	_ = godotenv.Load(".env")
 	valid_alg = strings.Split(os.Getenv("JWT_VALID_ALG"), " ")
+	valid_sub = strings.Split(os.Getenv("JWT_VALID_SUB"), " ")
 }
 
 type PubKeyCache struct {
@@ -46,6 +48,18 @@ func getKey(url string) string {
 
 func validAlg(x string) bool {
 	for _, n := range valid_alg {
+		if x == n {
+			return true
+		}
+	}
+	return false
+}
+
+func validSub(x string) bool {
+	if valid_sub[0] == "" {
+		return true
+	}
+	for _, n := range valid_sub {
 		if x == n {
 			return true
 		}
@@ -84,11 +98,43 @@ func ValidateJWTRSA(jwtToken string, pubKeyURL string) (bool, error) {
 	}
 	token, jwtError := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
 		alg := token.Header["alg"]
+		claims := token.Claims.(jwt.MapClaims)
+		sub := claims["sub"]
 		if !validAlg(alg.(string)) {
 			return nil, fmt.Errorf("Invalid alg: %s", alg)
 		}
+		if !validSub(sub.(string)) {
+			return nil, fmt.Errorf("Invalid sub: %s", sub)
+		}
 		return pubKey, nil
 	})
+	if jwtError != nil {
+		return false, jwtError
+	}
+
+	return checkJWT(token, jwtError)
+}
+
+func ValidateJWTHMAC(jwtToken string, secret string) (bool, error) {
+	token, jwtError := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
+		alg := token.Header["alg"]
+		claims := token.Claims.(jwt.MapClaims)
+		sub := claims["sub"]
+		if !validAlg(alg.(string)) {
+			return nil, fmt.Errorf("Invalid alg: %s", alg)
+		}
+		if !validSub(sub.(string)) {
+			return nil, fmt.Errorf("Invalid sub: %s", sub)
+		}
+		return []byte(secret), nil
+	})
+	return checkJWT(token, jwtError)
+}
+
+func checkJWT(token *jwt.Token, jwtError error) (bool, error) {
+	if jwtError != nil {
+		return false, jwtError
+	}
 	if !token.Valid {
 		if ve, ok := jwtError.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
@@ -102,27 +148,6 @@ func ValidateJWTRSA(jwtToken string, pubKeyURL string) (bool, error) {
 				return false, jwtError
 			}
 		}
-	}
-	return true, nil
-}
-
-func ValidateJWTHMAC(jwtToken string, secret string) (bool, error) {
-	token, jwtError := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
-		alg := token.Header["alg"]
-		if !validAlg(alg.(string)) {
-			return nil, fmt.Errorf("Invalid alg: %s", alg)
-		}
-		return []byte(secret), nil
-	})
-	if jwtError != nil {
-		log.Fatal("Error", jwtError)
-		return false, jwtError
-	} else if !token.Valid {
-		log.Fatal("Token is invalid")
-		return false, nil
-	} else if ve, ok := jwtError.(*jwt.ValidationError); ok {
-		log.Println(ve)
-		log.Println(ok)
 	}
 	return true, nil
 }

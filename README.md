@@ -4,6 +4,9 @@ The server will check every requests using one of the available methods: jwt (us
 and only authorized requests will be routed. Since you can only using tile38 AUTH command by a cli interface,
 this docker image allows you ensure http calls only come from authorized clients.
 
+[Docker Hub](https://hub.docker.com/r/lucascalion/tile38-webserver)
+[tidwall/tile38](https://github.com/tidwall/tile38)
+
 # Environment variables
 
 This is an example for the .env file that must be placed inside the data folder.
@@ -21,6 +24,8 @@ VALIDATION_TYPE="jwt_rsa"
 #VALIDATION_SECRET="mysecret"
 # List of jwt valid alg values, this is required for security purposes
 JWT_VALID_ALG="RS512 RS256"
+# Optional: list of jwt valid sub values
+#JWT_VALID_SUB="user microservice"
 # URI for a RSA Public key pem file used during request validation if VALIDATION_TYPE is jwt_rsa
 PUBKEY_URI="https://my.public.key/key.pem"
 # Address and port that the server will bind to
